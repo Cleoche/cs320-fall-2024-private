@@ -3,7 +3,9 @@ let is_prime k =
         false
     else
         let rec divisors d = 
-            d * d > k || (k mod d <> 0 && divisors (d+1))
+            if d * d > k then true
+            else if k mod d = 0 then false
+            else divisors (d + 1)
         in divisors 2
 
 
