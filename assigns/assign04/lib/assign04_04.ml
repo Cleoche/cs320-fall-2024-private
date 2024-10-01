@@ -27,7 +27,9 @@ let rec type_of' cx e =
     | False -> Some Bool
     | Num _ -> Some Int
     | Var a -> iterate cx a
-    | Let (a, b, c) -> let x = (match type_of' cx b with | Some y -> type_of' ((a, x)::cx) c | _ -> None)
+    | Let (a, b, c) -> (match type_of' cx b with 
+                        | Some y -> type_of' ((a, y)::cx) c 
+                        | _ -> None)
     | Add (a, b) -> if (type_of' cx a = Some Int) && (type_of' cx b = Some Int) then Some Int else None
     | Or (a, b) -> if (type_of' cx a = Some Bool) && (type_of' cx b = Some Bool) then Some Bool else None
     | IfThenElse (a, b, c) -> if (type_of' cx a = Some Bool) && (type_of' cx b = type_of' cx c) then type_of' cx b 
