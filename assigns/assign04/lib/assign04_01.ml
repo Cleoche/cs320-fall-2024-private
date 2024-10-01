@@ -1,18 +1,26 @@
 let last_function_standing funcs start pred = 
-    let rec test f max input =
-        if max = 0 then 1 else
-        let out = f input
-        in
-        if (not (pred out)) then 1 + test f out (max - 1) else 0
+    let rec make_output funcs = 
+        match funcs with 
+        | [] -> []
+        | _::t -> start::(make_output t)
     in
-    let rec iterate fs iter f max = 
-        match fs with 
-        | [] -> f
-        | h::t -> let out = test h start max in 
-            if (out - 1000 >= iter) then
-                iterate (t@[h]) out (Some h) (max + 1000)
-            else if (iter = out) then iterate t iter None max
-            else if (out > iter) then iterate t out (Some h) max else iterate t iter f max
+    let rec in_iterate funcs outputs keep new_outs = 
+        match funcs, outputs with 
+        | [], [] -> (keep, new_outs)
+        | h::t, x::y -> let out = h x in
+                        if (pred out) then in_iterate t y keep new_outs
+                        else in_iterate t y (h::keep) (out::new_outs)
+        | _, _ -> assert false
     in
-    iterate funcs (-1) None 1000
-
+    let rec out_iterate funcs outputs= 
+        match funcs with
+        | [] -> None
+        | h::t ->
+                if t = [] then (Some h)
+                else let (nfuncs, noutputs) = in_iterate funcs outputs [] []
+                in
+                out_iterate nfuncs noutputs
+    in
+    let outs = make_output funcs
+    in
+    out_iterate funcs outs
