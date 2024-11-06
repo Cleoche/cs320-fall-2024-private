@@ -1,5 +1,6 @@
 %{
 open Utils
+<<<<<<< HEAD
 let rec mk_app e es = 
     match es with
     | [] -> e
@@ -41,11 +42,20 @@ let rec mk_app e es =
 %right AND
 %right OR
 
+=======
+%}
+
+%token <int> NUM
+%token <string> VAR
+%token EOF
+
+>>>>>>> upstream/main
 %start <Utils.prog> prog
 
 %%
 
 prog:
+<<<<<<< HEAD
   | e = expr; EOF { e }
 
 expr: 
@@ -88,3 +98,6 @@ expr3:
 
 
 
+=======
+  | EOF { Num 0 }
+>>>>>>> upstream/main
